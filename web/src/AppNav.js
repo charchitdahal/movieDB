@@ -12,11 +12,9 @@ class AppNav extends Component {
                         <NavItem>
                             <NavLink href="/">Home</NavLink>
                         </NavItem>
+
                         <NavItem>
-                            <NavLink href="/genre">Genre</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="/movie">Movie</NavLink>
+                            <NavLink href="/movie">Movies</NavLink>
                         </NavItem>
 
                     </Nav>

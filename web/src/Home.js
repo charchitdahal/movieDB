@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import AppNav from "./AppNav";
-import Genre from "./Genre";
+
 
 
 class Home extends Component{
@@ -11,7 +11,7 @@ class Home extends Component{
             <div>
                 <AppNav/>
 
-                <h2 style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+                <h2 style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
 
                     Welcome to Movie Database
                 </h2>

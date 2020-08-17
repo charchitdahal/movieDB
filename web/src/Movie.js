@@ -1,65 +1,132 @@
 import React, {Component} from 'react';
 import AppNav from "./AppNav";
-import Genre from "./Genre";
 import {Link} from "react-router-dom";
 import { Table,Container,Input,Button,Label, FormGroup, Form} from 'reactstrap';
 
 class Movie extends Component{
-    state = {
+    emptyItem={
+        id: '105',
+        name: '',
+        description: '',
+        genre: ''}
 
-        isLoading :true,
-        movies: []
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isLoading :true,
+            genre: [],
+            movies: [],
+            item: this.emptyItem
+        }
+        this.handleSubmit= this.handleSubmit.bind(this);
+        this.handleChange= this.handleChange.bind(this);
+
+    }
+
+    async handleSubmit(event){
+
+        const item = this.state.item;
+        await fetch(`/api/movie`, {
+            method : 'POST',
+            headers : {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify(item),
+        });
+
+        event.preventDefault();
+        this.props.history.push("/movie");
+    }
+
+    handleChange(event){
+        const target= event.target;
+        const value= target.value;
+        const name = target.name;
+        let item={...this.state.item};
+        item[name] = value;
+        this.setState({item});
+
+    }
+    async remove(id){
+        await fetch(`/api/movie/${id}` , {
+            method: 'DELETE' ,
+            headers : {
+                'Accept' : 'application/json',
+                'Content-Type' : 'application/json'
+            }
+
+        }).then(() => {
+            let updatedExpenses = [...this.state.Movie].filter(i => i.id !== id);
+            this.setState({Movie : updatedExpenses});
+        });
 
     }
 
     async componentDidMount(){
-        const response= await fetch('/api/genre');
+
+
+        const response= await fetch('/api/movie');
         const body= await response.json();
-        this.setState({Genre : body , isLoading :false});
+        this.setState({Movie : body , isLoading :false});
     }
 
-    handleChange
 
     render() {
 
+
+
         const title=<h2>Add Movie</h2>
-        const {Genre,isLoading} = this.state;
+        const {Genre} = this.state;
+        const {Movie,isLoading} = this.state;
 
         if(isLoading)
             return(<div>Loading....</div>)
 
-        let optionList  =
-            Genre.map( (category) =>
-                <option value={category.id} key={category.id}>
-                    {category.name}
-                </option>
-            )
-        return (
 
+        let rows=
+            Movie.map( movie =>
+                <tr key={movie.id}>
+                    <td>{movie.name}</td>
+                    <td>{movie.description}</td>
+                    <td>{movie.genre}</td>
+
+                    <td><Button size="sm" color="danger" onClick={() => this.remove(movie.id)}>Delete</Button></td>
+
+                </tr>
+
+            );
+
+
+        return (
             <div>
                 <AppNav/>
-                <Container>
+
+
+                <Container >
                     {title}
-                    <Form onSubmit={this.handleChange}>
+                    <hr/>
+                    <Form onSubmit={this.handleSubmit} >
                         <FormGroup>
-                            <label for="title"> Title</label>
-                            <input type="text" name="title" id="title" onChange={this.handleChange}/>
+                            <label for="name"> Title</label>
+                            <input type="name" name="name" id="name" onChange={this.handleChange} autoComplete="name"/>
                         </FormGroup>
 
                         <FormGroup>
                             <label for="genre"> Genre</label>
-                            <select onChange={this.handleChange}>
-                                {optionList}
-                            </select>
+                            <input type="genre" name="genre" id="genre" onChange={this.handleChange}/>
+                        </FormGroup>
+
+
+                        <FormGroup>
+                            <label for="description"> Description</label>
+                            <input type="description" name="description" id="description" onChange={this.handleChange}/>
                         </FormGroup>
 
                         <FormGroup>
-                            <label for="disc"> Description</label>
-                            <input type="disc" name="disc" id="disc" onChange={this.handleChange}/>
-                        </FormGroup>
-
-                        <FormGroup>
-                            <Button color="primary" type="submit"> Save</Button>
+                            <Button color="primary" type="submit">Save</Button>{' '}
                             <Button color="secondary" tag={Link} to="/"> Cancel</Button>
                         </FormGroup>
 
@@ -68,6 +135,27 @@ class Movie extends Component{
 
                 </Container>
 
+                {''}
+                <Container>
+                    <h3>Movies List</h3>
+                    <Table className="my-4">
+                        <thead>
+                        <tr>
+                            <th width="20%"> Name  </th>
+                        <th width="20%"> Description   </th>
+                        <th width="20%"> Genre  </th>
+
+                           < th width="20%"> Action  </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {rows}
+                        </tbody>
+
+                    </Table>
+                </Container>
+                }
             </div>
 
 
