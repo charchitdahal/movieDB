@@ -3,6 +3,18 @@ import AppNav from "./AppNav";
 import {Link} from "react-router-dom";
 import { Table,Container,Input,Button,Label, FormGroup, Form} from 'reactstrap';
 
+/**
+ *
+ * Functions within Movie.js
+ *
+ * @handleSubmit
+ * @handleChange
+ * @remove
+ * @componentDidMount
+ * @render
+ *
+ */
+
 class Movie extends Component{
     emptyItem={
         id: '105',
@@ -25,6 +37,8 @@ class Movie extends Component{
 
     }
 
+// prop that you'd pass to onSubmit
+// mid layer for forms' submit handler.
     async handleSubmit(event){
 
         const item = this.state.item;
@@ -41,6 +55,8 @@ class Movie extends Component{
         this.props.history.push("/movie");
     }
 
+
+// mid layer for forms' onChange handler.
     handleChange(event){
         const target= event.target;
         const value= target.value;
@@ -50,6 +66,7 @@ class Movie extends Component{
         this.setState({item});
 
     }
+    //calls in DELETE API passing method and headers as JSON
     async remove(id){
         await fetch(`/api/movie/${id}` , {
             method: 'DELETE' ,

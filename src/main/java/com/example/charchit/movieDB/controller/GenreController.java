@@ -30,6 +30,7 @@ public class GenreController {
         return genreRepo.findAll();
     }
 
+    //Retrieve genre using unique id
     @GetMapping("/genre/{id}")
     ResponseEntity<?> getGenre(@PathVariable Long id){
         Optional<Genre> genre = genreRepo.findById(id);
@@ -37,19 +38,20 @@ public class GenreController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    //Add genre using name
     @PostMapping("/genre")
     ResponseEntity<Genre> createGenre(@Validated @RequestBody Genre genre) throws URISyntaxException{
         Genre result = genreRepo.save(genre);
         return ResponseEntity.created(new URI("api/genre" + result.getId())).body(result);
 
     }
-
+    //Edit genre using id as unique identifier
     @PutMapping("/genre/{id}")
     ResponseEntity<Genre> updateGenre (@Validated @RequestBody Genre genre){
         Genre result = genreRepo.save(genre);
         return ResponseEntity.ok().body(result);
     }
-
+    //Delete genre using id as unique identifier
     @DeleteMapping("/genre/{id}")
     ResponseEntity<Genre> deleteGenre(@PathVariable Long id){
         genreRepo.deleteById(id);

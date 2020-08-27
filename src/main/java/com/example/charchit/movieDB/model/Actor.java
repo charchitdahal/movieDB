@@ -20,6 +20,7 @@ public class Actor {
     private Long id;
     private String name;
 
+    // to be added later
 //    @OneToMany
 //    private Set<Genre> genre;
 
